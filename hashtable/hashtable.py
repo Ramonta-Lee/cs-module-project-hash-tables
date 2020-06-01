@@ -7,6 +7,11 @@ class HashTableEntry:
         self.value = value
         self.next = None
 
+    def __repr__(self):
+        return f'HashTableEntry({repr(self.key)}, {repr(self.value)})'
+
+    
+
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -22,7 +27,12 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
+        self.capacity = capacity
+        self.storage = [None] * capacity # this gives methods access to the array 
 
+
+        # print("hello", self.capacity)
+        
 
     def get_num_slots(self):
         """
@@ -35,6 +45,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return self.capacity
+
 
 
     def get_load_factor(self):
@@ -63,9 +75,14 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for c in key:
+            hash = (hash * 33) + ord(c)
+        
+        return hash
 
 
-    def hash_index(self, key):
+    def hash_index(self, key): # hashing function
         """
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
@@ -82,6 +99,17 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # create key 
+        # self.hash stores it at a specific index within your created array
+        # the key now points at an index
+        # then add a value to the key to create key/value pair
+
+
+        index = self.hash_index(key)
+        self.storage[index] = HashTableEntry(key, value)
+        
+
+
 
 
     def delete(self, key):
@@ -93,6 +121,9 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        self.put(key, None)
+
+        
 
 
     def get(self, key):
@@ -104,6 +135,13 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        hash_value = self.storage[index]
+
+        if hash_value is not None:
+            return hash_value.value
+        
+        return None
 
 
     def resize(self, new_capacity):
