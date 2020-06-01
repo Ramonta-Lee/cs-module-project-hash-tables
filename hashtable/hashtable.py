@@ -28,7 +28,8 @@ class HashTable:
     def __init__(self, capacity):
         # Your code here
         self.capacity = capacity
-        self.storage = [None] * capacity # this gives methods access to the array 
+        self.storage = [None] * capacity 
+        # this gives methods access to the array 
 
 
         # print("hello", self.capacity)
@@ -104,8 +105,10 @@ class HashTable:
         # the key now points at an index
         # then add a value to the key to create key/value pair
 
+        # get index of the passed in key
+        index = self.hash_index(key) 
 
-        index = self.hash_index(key)
+        # store the value at the index
         self.storage[index] = HashTableEntry(key, value)
         
 
@@ -121,7 +124,10 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        self.put(key, None)
+        if not key:
+            print("Key does not exist")
+        else:
+            self.put(key, None)
 
         
 
