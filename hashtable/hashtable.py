@@ -16,7 +16,45 @@ class HashTableEntry:
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
 
+class LinkedList:
+    def __init__(self):
+        self.head = None
 
+    def insert_at_head(self, node):
+        node.next = self.head
+        self.head = node
+
+    def find(self, key):
+        cur = self.head
+
+        while cur is not None:
+            if cur.key == key:
+                return cur
+            
+            cur = cur.next
+        
+        return None
+    
+    def delete(self, key):
+        cur = self.head
+
+        if cur.key == key:
+            self.head = self.head.next
+            return cur
+
+        prev = cur
+        cur = cur.next
+
+        while cur is not None:
+            if cur.key == key:
+                prev.next = cur.next
+                return cur
+            
+            else:
+                prev = prev.next
+                cur = cur.next
+        
+        return None
 class HashTable:
     """
     A hash table that with `capacity` buckets
@@ -25,10 +63,11 @@ class HashTable:
     Implement this.
     """
 
-    def __init__(self, capacity):
+    def __init__(self, capacity=MIN_CAPACITY):
         # Your code here
         self.capacity = capacity
-        self.storage = [None] * capacity 
+        self.storage = [LinkedList()] * self.capacity 
+        self.load = 0
         # this gives methods access to the array 
 
 
@@ -56,7 +95,13 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        loadFactor = self.load / self.capacity
+        
+        if loadFactor > 0.7:
+            new_capacity = self.capacity * 2
+            self.resize(new_capacity)
+        
+        return loadFactor
 
 
     def fnv1(self, key):
@@ -106,10 +151,19 @@ class HashTable:
         # then add a value to the key to create key/value pair
 
         # get index of the passed in key
+        # Find the slot for the given key
         index = self.hash_index(key) 
 
+        # Search the LinkedList
+        current = self.storage[index].find(key)
+        if current is not None:
+            current.value = value
+        else:
+            self.storage[index].insert_at_head(HashTableEntry(key, value))
+            self.load += 1
+
         # store the value at the index
-        self.storage[index] = HashTableEntry(key, value)
+        # self.storage[index] = HashTableEntry(key, value)
         
 
 
@@ -124,10 +178,16 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        
+
         if not key:
             print("Key does not exist")
         else:
-            self.put(key, None)
+            index = self.hash_index(key)
+            self.load -= 1
+            return self.storage[index].delete(key)
+            
+            
 
         
 
@@ -144,8 +204,10 @@ class HashTable:
         index = self.hash_index(key)
         hash_value = self.storage[index]
 
-        if hash_value is not None:
-            return hash_value.value
+        if self.storage[index] is not None:
+            desired = hash_value.find(key)
+            if desired is not None:
+                return desired.value
         
         return None
 
@@ -158,6 +220,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # new_storage = [LinkedList()] * new_capacity
+        # self.capacity = new_capacity
+
+        # for each in self.storage:
+        #     while each.next is not None:
+        #         each.put(new_storage)
+
+        
 
 
 
