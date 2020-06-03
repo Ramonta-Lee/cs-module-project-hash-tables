@@ -1,4 +1,15 @@
 # Your code here
+import math
+import random
+
+# create a lookup table
+lookup = {}
+
+# check table for key(x, y)
+# if present, return value
+# else, calculate, add value to lookup table 
+# return value
+
 
 
 def slowfun_too_slow(x, y):
@@ -15,6 +26,13 @@ def slowfun(x, y):
     output, but completes quickly instead of taking ages to run.
     """
     # Your code here
+    key = (x, y)
+    # check table for key(x,y)
+    if key not in lookup:
+        # if not present, calculate => slowfun_too_slow add value to table and return value
+        lookup[key] = slowfun_too_slow(x, y)
+    # if present, return value
+    return lookup[key]
 
 
 
