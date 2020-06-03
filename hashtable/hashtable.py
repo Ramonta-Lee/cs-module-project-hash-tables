@@ -100,6 +100,13 @@ class HashTable:
         if loadFactor > 0.7:
             new_capacity = self.capacity * 2
             self.resize(new_capacity)
+
+        if loadFactor < 0.2:
+            new_capacity = self.capacity / 2
+
+            if new_capacity < 8:
+                new_capacity = 8
+
         
         return loadFactor
 
@@ -219,13 +226,22 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-        # new_storage = [LinkedList()] * new_capacity
-        # self.capacity = new_capacity
+        # holding a copy of the original hashtable
+        holding = self.storage.copy()
 
-        # for each in self.storage:
-        #     while each.next is not None:
-        #         each.put(new_storage)
+        # overwrites old storage to be bigger
+        self.storage = [LinkedList()] * new_capacity
+
+        # sets the capacity (actual number) to the new size
+        self.capacity = new_capacity
+
+        for each in holding:
+            current = each.head
+
+            while current is not None:
+                self.put(current.key, current.value)
+                current = current.next
+                
 
         
 
